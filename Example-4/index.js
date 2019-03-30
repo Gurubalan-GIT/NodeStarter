@@ -10,12 +10,13 @@ const port = 3000;
 const server = http.createServer((req,res)=>{
     //These are where we request headers from the request object, this is returned from the server after you launch you browser
     console.log(`Request for ${req.url} by method ${req.method}`);
-
+//Server configs for serving the file 
     if (req.method == 'GET') {
         var fileUrl;
-        if (req.url == '/') fileUrl = '/index.html';
-        else fileUrl = req.url;
-    
+        if (req.url == '/') {
+            fileUrl = '/index.html';}
+        else {
+            fileUrl = req.url;}
         var filePath = path.resolve('./'+fileUrl);
         const fileExt = path.extname(filePath);
         if (fileExt == '.html') {
