@@ -13,6 +13,7 @@ app.use(express.static(__dirname));
 //Now this means your request body if sent in jSON format will get parsed. An example is given with POST request below
 app.use(bodyparser.json());
 
+//Now see here, I'm routing this to a express router called dishRouter, please look at the dishRouter.js file 
 app.use('/dishes', dishRouter);
 
 //If none of these end points are set AND index.html isn't fount the below HTML file is served!

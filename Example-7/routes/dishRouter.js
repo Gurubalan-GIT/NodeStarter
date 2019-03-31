@@ -5,6 +5,7 @@ const dishRouter = express.Router();
 
 dishRouter.use(bodyParser.json());
 
+//Now here I'm routing if one /dishes/ comes in as an end point
 dishRouter.route('/')
 .all((req,res,next) => {
     res.statusCode = 200;
@@ -25,8 +26,13 @@ dishRouter.route('/')
     res.end('Deleting all dishes');
 });
 
-
+//And here I'm handling with ID's as a request with a dedicated end point for it 
 dishRouter.route('/:dishId')
+.all((req,res,next) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    next();
+})
 .get((req,res,next) => {
     res.end('Will send details of the dish: ' + req.params.dishId +' to you!');
 })
@@ -43,5 +49,5 @@ dishRouter.route('/:dishId')
     res.end('Deleting dish: ' + req.params.dishId);
 });
 
-
+//Exporting it so that we can require/import it in the index.js file
 module.exports = dishRouter;
