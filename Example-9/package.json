@@ -1,0 +1,15 @@
+{
+  "name": "mongodb-connection-tester",
+  "version": "1.0.0",
+  "description": "Testing MongoDB server connections and the driver",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gurubalan H",
+  "license": "ISC",
+  "dependencies": {
+    "assert": "^1.4.1",
+    "mongodb": "^3.2.2"
+  }
+}
