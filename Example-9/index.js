@@ -34,7 +34,7 @@ MongoClient.connect(url, (err, client) => {
             console.log("Found:\n");
             console.log(docs);//Will return all the documents from the collection conFusion
 
-            //dropping the collection dishes 
+            //dropping the collection dishes, first parameter is the collection name and second is a callback which returns a result/Error
             db.dropCollection("dishes", (err, result) => {
                 assert.equal(err,null);
 
