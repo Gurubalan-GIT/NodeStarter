@@ -1,5 +1,4 @@
 const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
 const dboperation=require('./operations');
 
 
@@ -7,42 +6,45 @@ const url = 'mongodb://localhost:27017/';
 const dbname = 'conFusion';
 
 //Connecting to the MongoDB Server and (err,client) call back takes place 
-MongoClient.connect(url, (err, client) => {
-
-    //Will give an error if it is not connected properly, this is where assert is used 
-    assert.equal(err,null);
-
+MongoClient.connect(url).then((client) => {
+    
     console.log('Connected correctly to server');
-
     //Connecting the database here 
     const db = client.db(dbname);
     //Inserting document by accessing database
-    dboperation.insertDocument(db,{name:"Gurubalan", description: "Some test data"},'dishes',(result)=>{ //here (result) is the callback function
+    dboperation.insertDocument(db,{name:"Gurubalan", description: "Some test data"},'dishes').then((result)=>{ 
         console.log('Insert document:\n',result.ops); //result.ops gives the number 
 
         //Finding documents here and printing them
-        dboperation.findDocuments(db,'dishes',(docs)=>{
+        return dboperation.findDocuments(db,'dishes');
+        
+    }).then((docs)=>{
             console.log('Found documents:\n',docs);
 
             //Here we are updating document by finding the documents with name - Gurubalan and updating the description part alone
-            dboperation.updateDocument(db,{name: "Gurubalan"},{description: "Updated Test data"},'dishes',(result)=>{ 
+            return dboperation.updateDocument(db,{name: "Gurubalan"},{description: "Updated Test data"},'dishes');
+
+    }).then((result)=>{ 
 
                 console.log('Updated records/document:\n',result.result)
 
                 //Finding once again and dropping the collection we created 
-                dboperation.findDocuments(db,'dishes',(docs)=>{
+                return dboperation.findDocuments(db,'dishes');
+    }).then((docs)=>{
                     console.log('Found documents:\n',docs);
                     
-                    db.dropCollection('dishes',(result)=>{
+                    return db.dropCollection('dishes');
+    }).then((result)=>{
                         console.log('Dropped collection: ',result);
 
                         //Closing the client connection pools
-                        client.close();
-                    });
-                });
-            });
-        });
-    });
+                        return client.close();
+    })
+
+    .catch((err) => console.log(err));
+})
+.catch((err)=>{
+    console.log(err)
 });
-//Since everything is nested inside callbacks here, once a callback is completed only then the body gets executed further
-//This is often known as callback hell , we will deal this situation with promises hence eliminating callback hell 
+//Callback hell is avoided with promises 
+//No more assertion required 
