@@ -1,5 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+const dboperation=require('./operations');
+
 
 const url = 'mongodb://localhost:27017/';
 const dbname = 'conFusion';
@@ -14,33 +16,32 @@ MongoClient.connect(url, (err, client) => {
 
     //Connecting the database here 
     const db = client.db(dbname);
-    //We are accessing the collecion we created here 
-    const collection = db.collection("dishes");
-    //Insertion of the first value (Document)
-    collection.insertOne({"name": "Uthappizza", "description": "test"},
+    //Inserting document by accessing database
+    dboperation.insertDocument(db,{name:"Gurubalan", description: "Some test data"},'dishes',(result)=>{ //here (result) is the callback function
+        console.log('Insert document:\n',result.ops); //result.ops gives the number 
 
-    //2nd argument to the callback function and we check after insertion what action is to be done
-    (err, result) => {
-        //Assertion again confirming no errors are present
-        assert.equal(err,null);
+        //Finding documents here and printing them
+        dboperation.findDocuments(db,'dishes',(docs)=>{
+            console.log('Found documents:\n',docs);
 
-        console.log("After Insert:\n");
-        console.log(result.ops);
+            //Here we are updating document by finding the documents with name - Gurubalan and updating the description part alone
+            dboperation.updateDocument(db,{name: "Gurubalan"},{description: "Updated Test data"},'dishes',(result)=>{ 
 
-        //Fetching and finding out all jSON objects by giving an empty jSON string {} and converting it into an array
-        collection.find({}).toArray((err, docs) => { //Takes another parameter
-            assert.equal(err,null);
-            
-            console.log("Found:\n");
-            console.log(docs);//Will return all the documents from the collection conFusion
+                console.log('Updated records/document:\n',result.result)
 
-            //dropping the collection dishes, first parameter is the collection name and second is a callback which returns a result/Error
-            db.dropCollection("dishes", (err, result) => {
-                assert.equal(err,null);
+                //Finding once again and dropping the collection we created 
+                dboperation.findDocuments(db,'dishes',(docs)=>{
+                    console.log('Found documents:\n',docs);
+                    
+                    db.dropCollection('dishes',(result)=>{
+                        console.log('Dropped collection: ',result);
 
-                //Closing the connection pool with MongoDB
-                client.close();
+                        //Closing the client connection pools
+                        client.close();
+                    });
+                });
             });
-        }); 
+        });
     });
 });
+//Since everything is nested inside callbacks here, once a callback is completed only then the body gets executed further
