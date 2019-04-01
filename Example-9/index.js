@@ -41,7 +41,6 @@ MongoClient.connect(url, (err, client) => {
                 //Closing the connection pool with MongoDB
                 client.close();
             });
-        });
+        }); 
     });
-
 });
