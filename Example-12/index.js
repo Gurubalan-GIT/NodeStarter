@@ -50,7 +50,7 @@ connect.then((db) => {
             return Dishes.find({}).exec();
         })
         .then((dishes) => {
-            console.log(dishes);
+            console.log(`Found dishes are:\n`,dishes);
 
             return Dishes.remove({});
         })
