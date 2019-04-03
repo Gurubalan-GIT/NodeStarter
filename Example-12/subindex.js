@@ -37,7 +37,9 @@ Dishes.create({
     return Dishes.find({});
 })
 .then((dishes)=> {
-    console.log(`Finding the documents->\n`,dishes);
+    //See doing just dishes doesn't print comments out, the comment field will return [object], hence we Stringify it, and null,4 actually
+    //Gives the line breaks and spaces now because it gets printed as a sting 
+    console.log(`Finding the documents->\n`,JSON.stringify(dishes,null,4));
 
     return Dishes.remove({});
 })

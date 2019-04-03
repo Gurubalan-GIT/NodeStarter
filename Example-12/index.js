@@ -9,7 +9,9 @@ const connect = mongoose.connect(url);
 connect.then((db) => {
 
     console.log('Connected correctly to server');
+
 //Created a document according to the Schema
+
 //Method -1 :
 
    /* var newDish = Dishes({
